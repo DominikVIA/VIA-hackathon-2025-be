@@ -1,6 +1,6 @@
 ﻿namespace Dtos;
 
-public class DeleteThroughDto
+public class ThoughtIdDto
 {
     public string Id { get; set; }
 }

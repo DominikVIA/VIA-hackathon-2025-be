@@ -37,7 +37,6 @@ public class ThoughtController : ControllerBase
     public async Task<IActionResult> Get([FromRoute] string id)
     {
         var response = await _service.GetByIdAsync(id);
-        response.Output = await _aiService.GetThoughFromPrompt(response.Title, response.Content);
         return Ok(response);
     }
     

@@ -40,14 +40,35 @@ public class MongoRepositoryService : IRepositoryService
 
     public async Task UpdateThoughtAsync(UpdateThoughtDto thoughtToUpdate)
     {
+        var thought = await GetByIdAsync(thoughtToUpdate.Id);
+        
         Thought updatedThought = new Thought
         {
             Id = thoughtToUpdate.Id,
-            Title = thoughtToUpdate.Title,
-            Content = thoughtToUpdate.Content,
+            Title = String.IsNullOrEmpty(thoughtToUpdate.Title) ? thought.Title : thoughtToUpdate.Title,
+            Content = String.IsNullOrEmpty(thoughtToUpdate.Content) ? thought.Content : thoughtToUpdate.Content,
+            // Output = String.IsNullOrEmpty(thoughtToUpdate.Output) ? thought.Output : thoughtToUpdate.Output,
+            CreatedAt = thought.CreatedAt,
         };
         
         await _thoughtsCollection.ReplaceOneAsync(t => t.Id == thoughtToUpdate.Id,
+            updatedThought);
+    }
+    
+    public async Task AddPromptToThoughtAsync(AddPromptToThoughtDto thoughtWithPrompt)
+    {
+        var thought = await GetByIdAsync(thoughtWithPrompt.Id);
+
+        Thought updatedThought = new Thought
+        {
+            Id = thoughtWithPrompt.Id,
+            Title = thought.Title,
+            Content = thought.Content,
+            Output = thoughtWithPrompt.Output,
+            CreatedAt = thought.CreatedAt,
+        };
+        
+        await _thoughtsCollection.ReplaceOneAsync(t => t.Id == thoughtWithPrompt.Id,
             updatedThought);
     }
 
