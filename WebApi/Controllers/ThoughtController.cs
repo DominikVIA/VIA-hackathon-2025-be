@@ -1,6 +1,7 @@
 ﻿using Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Repository;
+using WebApi.ServiceContracts;
 
 namespace WebApi.Controllers;
 
@@ -9,9 +10,11 @@ namespace WebApi.Controllers;
 public class ThoughtController : ControllerBase
 {
     private readonly IRepositoryService _service;
+    private readonly ILlmService _aiService;
     
-    public ThoughtController(IRepositoryService service)
+    public ThoughtController(IRepositoryService service, ILlmService aiService)
     {
+        _aiService = aiService;
         _service = service;
     }
     
@@ -37,4 +40,17 @@ public class ThoughtController : ControllerBase
         return Ok(response);
     }
     
+    [HttpPatch]
+    public async Task<IActionResult> Update([FromBody] UpdateThoughtDto thoughtToUpdate)
+    {
+        await _service.UpdateThoughtAsync(thoughtToUpdate);
+        return Ok();
+    }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] string id)
+    {
+        await _service.DeleteThoughtAsync(id);
+        return Ok();
+    }
 }
