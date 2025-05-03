@@ -38,16 +38,37 @@ public class MongoRepositoryService : IRepositoryService
         return await _thoughtsCollection.Find(t => t.Id == thought.Id).FirstOrDefaultAsync();
     }
 
-    public async Task UpdateThoughtAsync(string id, UpdateThoughtDto thoughtToUpdate)
+    public async Task UpdateThoughtAsync(UpdateThoughtDto thoughtToUpdate)
     {
+        var thought = await GetByIdAsync(thoughtToUpdate.Id);
+        
         Thought updatedThought = new Thought
         {
-            Id = id,
-            Title = thoughtToUpdate.Title,
-            Content = thoughtToUpdate.Content,
+            Id = thoughtToUpdate.Id,
+            Title = String.IsNullOrEmpty(thoughtToUpdate.Title) ? thought.Title : thoughtToUpdate.Title,
+            Content = String.IsNullOrEmpty(thoughtToUpdate.Content) ? thought.Content : thoughtToUpdate.Content,
+            // Output = String.IsNullOrEmpty(thoughtToUpdate.Output) ? thought.Output : thoughtToUpdate.Output,
+            CreatedAt = thought.CreatedAt,
         };
         
-        await _thoughtsCollection.ReplaceOneAsync(t => t.Id == id,
+        await _thoughtsCollection.ReplaceOneAsync(t => t.Id == thoughtToUpdate.Id,
+            updatedThought);
+    }
+    
+    public async Task AddPromptToThoughtAsync(AddPromptToThoughtDto thoughtWithPrompt)
+    {
+        var thought = await GetByIdAsync(thoughtWithPrompt.Id);
+
+        Thought updatedThought = new Thought
+        {
+            Id = thoughtWithPrompt.Id,
+            Title = thought.Title,
+            Content = thought.Content,
+            Output = thoughtWithPrompt.Output,
+            CreatedAt = thought.CreatedAt,
+        };
+        
+        await _thoughtsCollection.ReplaceOneAsync(t => t.Id == thoughtWithPrompt.Id,
             updatedThought);
     }
 
