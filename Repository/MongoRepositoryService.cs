@@ -47,7 +47,7 @@ public class MongoRepositoryService : IRepositoryService
             Id = thoughtToUpdate.Id,
             Title = String.IsNullOrEmpty(thoughtToUpdate.Title) ? thought.Title : thoughtToUpdate.Title,
             Content = String.IsNullOrEmpty(thoughtToUpdate.Content) ? thought.Content : thoughtToUpdate.Content,
-            // Output = String.IsNullOrEmpty(thoughtToUpdate.Output) ? thought.Output : thoughtToUpdate.Output,
+            Output = thought.Output,
             CreatedAt = thought.CreatedAt,
         };
         
