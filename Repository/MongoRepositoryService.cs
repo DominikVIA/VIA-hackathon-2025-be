@@ -38,16 +38,16 @@ public class MongoRepositoryService : IRepositoryService
         return await _thoughtsCollection.Find(t => t.Id == thought.Id).FirstOrDefaultAsync();
     }
 
-    public async Task UpdateThoughtAsync(string id, UpdateThoughtDto thoughtToUpdate)
+    public async Task UpdateThoughtAsync(UpdateThoughtDto thoughtToUpdate)
     {
         Thought updatedThought = new Thought
         {
-            Id = id,
+            Id = thoughtToUpdate.Id,
             Title = thoughtToUpdate.Title,
             Content = thoughtToUpdate.Content,
         };
         
-        await _thoughtsCollection.ReplaceOneAsync(t => t.Id == id,
+        await _thoughtsCollection.ReplaceOneAsync(t => t.Id == thoughtToUpdate.Id,
             updatedThought);
     }
 
